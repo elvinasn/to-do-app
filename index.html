@@ -4,27 +4,38 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%=htmlWebpackPlugin.options.title %></title>
+    <title><%=htmlWebpackPlugin.options.title%></title>
   <script defer src="main.js"></script></head>
   <body>
     <header>
       <div class="logo">
-        <img src="ffda0c6dbd19b03f6bc2.svg" alt="" />
-        <h1>Too Dooo</h1>
+        <img src="assets/images/logo..svg" alt="" />
+        <h1>Too Doo</h1>
       </div>
     </header>
     <nav>
-      <button class="nav__today">
-        <img src="b03de1b5607f819b332c.svg" alt="" />
-        <p>Today</p>
+      <button class="nav__today active">
+        <div class="nav__section">
+          <img src="assets/images/today..svg" alt="" />
+          <p>Today</p>
+        </div>
       </button>
       <button class="nav__thisweek">
-        <img src="6415d0fabf3173dbc8fb.svg" alt="" />
-        <p>This week</p>
+        <div class="nav__section">
+          <img src="assets/images/week..svg" alt="" />
+          <p>This week</p>
+        </div>
       </button>
       <button class="nav__projects">
-        <img src="cc73ca28618bb0ce2b80.svg" alt="" />
-        <p>Projects</p>
+        <div class="nav__section">
+          <img src="assets/images/projects..svg" alt="" />
+          <p>Projects</p>
+        </div>
+        <div class="nav__dropdown dropdown__content">
+          <button>Hello</button>
+          <button>Hello</button>
+          <button>Hello</button>
+        </div>
       </button>
     </nav>
     <main></main>

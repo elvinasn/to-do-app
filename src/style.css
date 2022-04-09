@@ -7,23 +7,20 @@
   font-family: "Roboto", sans-serif;
 }
 body {
-  background-color: #e6e6ea;
+  background-color: white;
   display: grid;
   grid-template: 80px 1fr / 1fr 4.5fr;
   width: 100vw;
   min-height: 100vh;
 }
+
+/* HEADER STYLING */
+
 header {
-  background-color: #fff;
+  background-color: #e85d75;
   grid-column: span 2;
   padding: 40px;
-}
-nav {
-  background-color: black;
-  color: red;
-}
-main {
-  background-color: blue;
+  color: white;
 }
 .logo {
   height: 100%;
@@ -37,4 +34,25 @@ main {
 .logo > img {
   height: 40px;
   width: 40px;
+}
+
+/* NAV STYLING */
+
+nav {
+  background-color: hsla(0, 0%, 95%);
+  color: red;
+}
+nav div,
+nav button {
+  width: 100%;
+}
+nav button {
+  display: flex;
+}
+nav img {
+  height: 20px;
+}
+
+main {
+  background-color: white;
 }

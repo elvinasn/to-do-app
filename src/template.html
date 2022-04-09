@@ -4,27 +4,38 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%=htmlWebpackPlugin.options.title %></title>
+    <title><%=htmlWebpackPlugin.options.title%></title>
   </head>
   <body>
     <header>
       <div class="logo">
         <img src="logo.svg" alt="" />
-        <h1>Too Dooo</h1>
+        <h1>Too Doo</h1>
       </div>
     </header>
     <nav>
-      <button class="nav__today">
-        <img src="today.svg" alt="" />
-        <p>Today</p>
+      <button class="nav__today active">
+        <div class="nav__section">
+          <img src="today.svg" alt="" />
+          <p>Today</p>
+        </div>
       </button>
       <button class="nav__thisweek">
-        <img src="week.svg" alt="" />
-        <p>This week</p>
+        <div class="nav__section">
+          <img src="week.svg" alt="" />
+          <p>This week</p>
+        </div>
       </button>
       <button class="nav__projects">
-        <img src="projects.svg" alt="" />
-        <p>Projects</p>
+        <div class="nav__section">
+          <img src="projects.svg" alt="" />
+          <p>Projects</p>
+        </div>
+        <div class="nav__dropdown dropdown__content">
+          <button>Hello</button>
+          <button>Hello</button>
+          <button>Hello</button>
+        </div>
       </button>
     </nav>
     <main></main>

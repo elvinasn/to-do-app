@@ -9,7 +9,7 @@
 body {
   background-color: white;
   display: grid;
-  grid-template: 80px 1fr / 1fr 4.5fr;
+  grid-template: 80px 1fr / 300px 1fr;
   width: 100vw;
   min-height: 100vh;
 }
@@ -40,19 +40,45 @@ header {
 
 nav {
   background-color: hsla(0, 0%, 95%);
-  color: red;
+  border-right: 1px solid black;
 }
 nav div,
-nav button {
+nav > button {
   width: 100%;
 }
-nav button {
-  display: flex;
+nav > button {
+  min-height: 60px;
+  gap: 10px;
+  padding: 20px;
+  font-size: 20px;
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+}
+nav button:hover,
+nav button:active,
+.active {
+  background-color: #fff;
 }
 nav img {
-  height: 20px;
+  height: 30px;
 }
-
+.nav__section {
+  display: flex;
+  align-items: center;
+}
+.dropdown__content {
+  display: none;
+  min-width: 100%;
+  z-index: 1;
+}
+.show {
+  display: block;
+}
+.nav__dropdown p {
+  padding: 20px;
+  border-bottom: 1px solid black;
+}
 main {
   background-color: white;
 }

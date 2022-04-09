@@ -8,7 +8,9 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
+    assetModuleFilename: "assets/images/[name].[ext]",
   },
+  devtool: "inline-source-map",
   plugins: [
     new HtmlWebpackPlugin({
       title: "Too-Doo",
@@ -24,9 +26,7 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        options: {
-          use: "file-loader",
-        },
+        type: "asset/resource",
       },
       {
         test: /\.html$/i,

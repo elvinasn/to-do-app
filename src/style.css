@@ -56,7 +56,7 @@ nav div,
 nav button {
   width: 100%;
 }
-nav button {
+nav button:not(.modal__button) {
   min-height: 60px;
   padding: 20px;
   font-size: 20px;
@@ -64,8 +64,8 @@ nav button {
   border: none;
   cursor: pointer;
 }
-nav button:hover,
-nav button:active,
+nav button:hover:not(.modal__button),
+nav button:active:not(.modal__button),
 .active {
   background-color: #fff;
 }
@@ -136,4 +136,8 @@ main {
 .show-modal {
   opacity: 1;
   pointer-events: auto;
+}
+.modal__header {
+  font-size: 20px;
+  font-weight: 700;
 }

@@ -1,5 +1,5 @@
-const Project = (name) => {
+const Project = (name, description) => {
   let listOfTasks = [];
-  return { name, listOfTasks };
+  return { name, description, listOfTasks };
 };
 export { Project };

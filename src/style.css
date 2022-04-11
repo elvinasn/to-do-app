@@ -97,9 +97,6 @@ nav img {
 .show {
   display: block;
 }
-main {
-  background-color: white;
-}
 .arrow-up {
   transition: 0.5s ease;
 }
@@ -141,4 +138,43 @@ main {
 .modal__header {
   font-size: 20px;
   font-weight: 700;
+}
+label {
+  display: block;
+}
+textarea {
+  resize: none;
+}
+main {
+  background-color: white;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.main__header-div {
+  display: flex;
+  gap: 20px;
+}
+.main__header-div img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: 0.4s ease;
+}
+.main__header-div img:hover {
+  transform: scale(1.1);
+}
+.main__header {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  min-width: max-content;
+}
+.main__description {
+  opacity: 0.7;
+  width: 70%;
+  text-align: center;
 }

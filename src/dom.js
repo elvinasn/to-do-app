@@ -6,7 +6,19 @@ const domController = (() => {
   const open = document.getElementById("add_project");
   const modal_container = document.getElementById("modal-container");
 
-  projectLists.push(Project("Project 1"));
+  const proj1 = Project("Project 1");
+  console.log(proj1);
+  proj1.addTask("labas");
+  console.log(proj1.get());
+  const objproj1 = JSON.stringify(proj1);
+  const proj = JSON.parse(objproj1);
+  proj.addTask("rajonas");
+
+  projectLists.push(JSON.stringify(Project("Project 1")));
+  projectLists.push(JSON.stringify(Project("Project 2")));
+
+  localStorage.setItem("projects", JSON.stringify(projectLists));
+  let list = JSON.parse(localStorage.getItem("projects"));
 
   const updateProjects = () => {
     dropDownContainer.innerHTML = "";
@@ -17,7 +29,7 @@ const domController = (() => {
       icon.src = projectImg;
       button.appendChild(icon);
       const name = document.createElement("p");
-      name.textContent = project.getName();
+      // name.textContent = JSON.parse(project).getName();
       button.appendChild(name);
       dropDownContainer.appendChild(button);
     });
@@ -86,7 +98,6 @@ const domController = (() => {
 
   document.querySelector(".nav__projects").onclick = toggleDropDown;
   updateProjects();
-  console.log(projectLists);
   return {};
 })();
 export { domController };

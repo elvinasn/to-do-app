@@ -85,7 +85,7 @@ nav img {
   animation: fadeIn 0.5s ease-in both;
 }
 .nav__dropdown > button {
-  padding-left: 50px;
+  padding-left: 50px !important;
   font-size: 18px;
 }
 .nav__dropdown > img {
@@ -107,6 +107,7 @@ main {
   transform: rotate(180deg);
 }
 .active {
+  background-color: #fff !important;
   font-weight: 700;
 }
 .add__project-container {

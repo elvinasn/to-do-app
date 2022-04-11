@@ -1,9 +1,24 @@
 const Project = (name) => {
+  let listOfTasks = [];
   const getName = () => name;
-  const getTask = (index) => listOfTasks[index];
   const addTask = (task) => listOfTasks.push(task);
   const removeTask = (index) => listOfTasks.splice(index, 1);
+  const get = () => {
+    return Object.freeze({
+      name,
+      listOfTasks,
+    });
+  };
+  const toJSON = () => {
+    return get();
+  };
 
-  return { getName, getTask, addTask, removeTask };
+  return Object.freeze({
+    toJSON,
+    getName,
+    addTask,
+    removeTask,
+    get,
+  });
 };
 export { Project };

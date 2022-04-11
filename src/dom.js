@@ -2,34 +2,31 @@ import { Project } from "./project";
 import projectImg from "./images/singleproj.svg";
 const domController = (() => {
   const dropDownContainer = document.querySelector(".nav__dropdown");
-  const projectLists = [];
+  let projectsList;
+  if (localStorage.getItem("projects")) {
+    console.log(localStorage.getItem("projects"));
+    console.log("zdrw");
+    projectsList = JSON.parse(localStorage.getItem("projects"));
+  } else {
+    console.log(localStorage.getItem("projects"));
+    projectsList = [Project("Project 1")];
+  }
+  console.log(projectsList);
+  localStorage.setItem("projects", JSON.stringify(projectsList));
+  console.log(JSON.parse(localStorage.getItem("projects")));
   const open = document.getElementById("add_project");
   const modal_container = document.getElementById("modal-container");
 
-  const proj1 = Project("Project 1");
-  console.log(proj1);
-  proj1.addTask("labas");
-  console.log(proj1.get());
-  const objproj1 = JSON.stringify(proj1);
-  const proj = JSON.parse(objproj1);
-  proj.addTask("rajonas");
-
-  projectLists.push(JSON.stringify(Project("Project 1")));
-  projectLists.push(JSON.stringify(Project("Project 2")));
-
-  localStorage.setItem("projects", JSON.stringify(projectLists));
-  let list = JSON.parse(localStorage.getItem("projects"));
-
   const updateProjects = () => {
     dropDownContainer.innerHTML = "";
-    projectLists.forEach((project) => {
+    projectsList.forEach((project) => {
       const button = document.createElement("button");
       button.classList.add("nav__section");
       const icon = new Image();
       icon.src = projectImg;
       button.appendChild(icon);
       const name = document.createElement("p");
-      // name.textContent = JSON.parse(project).getName();
+      name.textContent = project.name;
       button.appendChild(name);
       dropDownContainer.appendChild(button);
     });
@@ -85,7 +82,9 @@ const domController = (() => {
     add.classList.add("modal__button");
     form.appendChild(add);
     form.addEventListener("submit", () => {
-      projectLists.push(Project(input.value));
+      projectsList.push(Project(input.value));
+      console.log(projectsList);
+      localStorage.setItem("projects", JSON.stringify(projectsList));
     });
     modal.appendChild(form);
     return modal;

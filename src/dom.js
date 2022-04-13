@@ -282,9 +282,17 @@ const domController = (() => {
     taskPara.textContent = task.task;
     wrapper.appendChild(taskPara);
 
-    const priority = document.createElement("p");
-    priority.textContent = task.priority;
-    wrapper.appendChild(priority);
+    switch (task.priority) {
+      case "low":
+        wrapper.classList.add("left-border-green");
+        break;
+      case "medium":
+        wrapper.classList.add("left-border-yellow");
+        break;
+      case "high":
+        wrapper.classList.add("left-border-red");
+        break;
+    }
 
     const dueDate = document.createElement("p");
     dueDate.textContent = task.dueDate;
@@ -364,10 +372,6 @@ const domController = (() => {
     option3.textContent = "High";
     inputPriority.appendChild(option3);
 
-    const option4 = document.createElement("option");
-    option4.value = "urgent";
-    option4.textContent = "Urgent";
-    inputPriority.appendChild(option4);
     divPriority.appendChild(inputPriority);
 
     form.appendChild(divPriority);

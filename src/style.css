@@ -181,15 +181,24 @@ main {
 }
 
 .project__task {
+  width: 100%;
+  padding: 10px;
+  justify-content: space-around;
   background-color: hsl(0, 0%, 95%);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
   display: flex;
+  margin: 10px;
+}
+.project__task > p:first-child {
+  margin-right: auto;
 }
 .modal__close {
   float: right;
   background-color: inherit;
   border: none;
   height: min-content;
-  border-radius: 10px;
+
   cursor: pointer;
 }
 .modal__close img {
@@ -197,4 +206,17 @@ main {
 }
 .modal__close:hover img {
   transform: scale(1.1);
+}
+
+.left-border-green {
+  border-left: 10px solid #8fd694;
+}
+.left-border-yellow {
+  border-left: 10px solid #ffd670;
+}
+.left-border-red {
+  border-left: 10px solid #c23a5c;
+}
+.left-border-darkred {
+  border-left: 10px solid #b40c36;
 }

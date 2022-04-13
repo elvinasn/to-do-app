@@ -4,6 +4,7 @@ import editIcon from "./images/edit.svg";
 import deleteIcon from "./images/delete.svg";
 import { projectFunctions } from "./projectFunctions";
 import { Task } from "./task";
+import closeIcon from "./images/close.svg";
 
 const domController = (() => {
   const dropDownContainer = document.querySelector(".nav__dropdown");
@@ -79,6 +80,8 @@ const domController = (() => {
     const modal = document.createElement("div");
     modal.classList.add("modal");
 
+    modal.append(modalClose());
+
     const header = document.createElement("p");
     header.textContent = "Add a project";
     header.classList.add("modal__header");
@@ -136,6 +139,8 @@ const domController = (() => {
     );
     const modal = document.createElement("div");
     modal.classList.add("modal");
+
+    modal.append(modalClose());
 
     const header = document.createElement("p");
     header.textContent = "Edit project";
@@ -198,6 +203,7 @@ const domController = (() => {
 
     const modal = document.createElement("div");
     modal.classList.add("modal");
+    modal.append(modalClose());
 
     const header = document.createElement("p");
     header.textContent = "Do you really want to delete this project?";
@@ -294,6 +300,8 @@ const domController = (() => {
 
     const modal = document.createElement("div");
     modal.classList.add("modal");
+
+    modal.append(modalClose());
 
     const header = document.createElement("p");
     header.textContent = "Add task";
@@ -423,6 +431,32 @@ const domController = (() => {
     modal_container.classList.add("show-modal");
   });
 
+  const modalClose = () => {
+    const button = document.createElement("button");
+    button.classList.add("modal__close");
+
+    const close = new Image();
+    close.src = closeIcon;
+
+    button.addEventListener("click", () => {
+      modal_container.classList.remove("show-modal");
+      modal_container.innerHTML = "";
+    });
+
+    button.appendChild(close);
+    return button;
+  };
+  window.onclick = (e) => {
+    if (modal_container.classList.contains("show-modal")) {
+      if (
+        e.target.closest(".modal") === null &&
+        e.target.closest("#modal-container") !== null
+      ) {
+        modal_container.classList.remove("show-modal");
+        modal_container.innerHTML = "";
+      }
+    }
+  };
   document.querySelector(".nav__projects").onclick = toggleDropDown;
   updateProjects();
   return {};

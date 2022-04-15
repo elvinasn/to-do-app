@@ -165,7 +165,8 @@ main {
   cursor: pointer;
   transition: 0.4s ease;
 }
-.main__header-div img:hover {
+.main__header-div img:hover,
+.task__options img:hover {
   transform: scale(1.1);
 }
 .main__header {
@@ -179,20 +180,39 @@ main {
   width: 70%;
   text-align: center;
 }
-
+.task__headers {
+  width: 100%;
+  padding: 10px;
+  justify-content: space-between;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  font-weight: 700;
+}
 .project__task {
   width: 100%;
   padding: 10px;
   justify-content: space-around;
+  align-items: center;
   background-color: hsl(0, 0%, 95%);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   display: flex;
-  margin: 10px;
+  margin: 5px;
 }
 .project__task > p:first-child {
   margin-right: auto;
 }
+.task__options {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.task__options img {
+  cursor: pointer;
+  transition: 0.4s ease;
+}
+
 .modal__close {
   float: right;
   background-color: inherit;

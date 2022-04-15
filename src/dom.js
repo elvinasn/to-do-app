@@ -224,6 +224,40 @@ const domController = (() => {
 
     return modal;
   };
+  const deleteTaskModal = (index) => {
+    const project = projectFunctions.getProjectByName(
+      projectsList,
+      document.querySelector(".main__header").textContent
+    );
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.append(modalClose());
+
+    const header = document.createElement("p");
+    header.textContent = "Do you really want to delete this task?";
+    header.classList.add("modal__header");
+    modal.appendChild(header);
+
+    const form = document.createElement("form");
+
+    const remove = document.createElement("button");
+    remove.textContent = "Yes";
+    remove.classList.add("modal__button");
+    form.appendChild(remove);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      projectsList[projectsList.indexOf(project)].listOfTasks.splice(index, 1);
+      localStorage.setItem("projects", JSON.stringify(projectsList));
+      modal_container.classList.remove("show-modal");
+      modal_container.innerHTML = "";
+      document.body.removeChild(main);
+      main = createProjectMain(projectsList[projectsList.indexOf(project)]);
+      document.body.appendChild(main);
+    });
+    modal.appendChild(form);
+
+    return modal;
+  };
 
   const createProjectMain = (project) => {
     const main = document.createElement("main");
@@ -263,20 +297,31 @@ const domController = (() => {
 
     addTask.addEventListener("click", () => {
       modal_container.classList.add("show-modal");
-      modal_container.appendChild(addTaskModal());
+      modal_container.appendChild(addTaskModal(true));
     });
     main.appendChild(addTask);
 
-    project.listOfTasks.forEach((task) => {
-      main.appendChild(createTaskDiv(task));
-    });
+    if (project.listOfTasks.length > 0) {
+      main.appendChild(createTaskHeaders());
+      let i = 0;
+      project.listOfTasks.forEach((task) => {
+        main.appendChild(createTaskDiv(task, i));
+        i++;
+      });
+    } else {
+      const noTasks = document.createElement("p");
+      noTasks.classList.add("main__header");
+      noTasks.textContent = "No tasks yet!";
+      main.appendChild(noTasks);
+    }
 
     return main;
   };
 
-  const createTaskDiv = (task) => {
+  const createTaskDiv = (task, index) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("project__task");
+    wrapper.dataset.index = index;
 
     const taskPara = document.createElement("p");
     taskPara.textContent = task.task;
@@ -293,14 +338,49 @@ const domController = (() => {
         wrapper.classList.add("left-border-red");
         break;
     }
+    const rightSide = document.createElement("div");
+    rightSide.classList.add("task__options");
+
+    const editTask = new Image();
+    editTask.src = editIcon;
+    editTask.addEventListener("click", () => {
+      modal_container.classList.add("show-modal");
+      modal_container.appendChild(
+        addTaskModal(false, wrapper.dataset.index, task)
+      );
+    });
+    rightSide.appendChild(editTask);
+
+    const removeTask = new Image();
+    removeTask.src = deleteIcon;
+    removeTask.addEventListener("click", () => {
+      modal_container.classList.add("show-modal");
+      modal_container.appendChild(deleteTaskModal(wrapper.dataset.index));
+    });
+    rightSide.appendChild(removeTask);
 
     const dueDate = document.createElement("p");
     dueDate.textContent = task.dueDate;
+    rightSide.appendChild(dueDate);
+    wrapper.appendChild(rightSide);
+    return wrapper;
+  };
+
+  const createTaskHeaders = () => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("task__headers");
+
+    const taskPara = document.createElement("p");
+    taskPara.textContent = "TASK";
+    wrapper.appendChild(taskPara);
+
+    const dueDate = document.createElement("p");
+    dueDate.textContent = "DUE DATE";
     wrapper.appendChild(dueDate);
     return wrapper;
   };
 
-  const addTaskModal = () => {
+  const addTaskModal = (toAdd, index = 0, task = Task("", "", "low", "")) => {
     const project = projectFunctions.getProjectByName(
       projectsList,
       document.querySelector(".main__header").textContent
@@ -327,6 +407,7 @@ const domController = (() => {
     const inputTask = document.createElement("input");
     inputTask.type = "text";
     inputTask.id = "task";
+    inputTask.value = task.task;
     inputTask.required = true;
     inputTask.maxLength = 20;
     divTask.append(inputTask);
@@ -344,6 +425,7 @@ const domController = (() => {
     inputDescription.required = true;
     inputDescription.rows = 3;
     inputDescription.cols = 20;
+    inputDescription.value = task.description;
     divDescription.appendChild(inputDescription);
     form.appendChild(divDescription);
 
@@ -359,16 +441,25 @@ const domController = (() => {
 
     const option1 = document.createElement("option");
     option1.value = "low";
+    if (task.priority == option1.value) {
+      option1.selected = true;
+    }
     option1.textContent = "Low";
     inputPriority.appendChild(option1);
 
     const option2 = document.createElement("option");
     option2.value = "medium";
     option2.textContent = "Medium";
+    if (task.priority == option2.value) {
+      option2.selected = true;
+    }
     inputPriority.appendChild(option2);
 
     const option3 = document.createElement("option");
     option3.value = "high";
+    if (task.priority == option3.value) {
+      option3.selected = true;
+    }
     option3.textContent = "High";
     inputPriority.appendChild(option3);
 
@@ -401,31 +492,57 @@ const domController = (() => {
     today = yyyy + "-" + mm + "-" + dd;
     inputDueDate.type = "date";
     inputDueDate.id = "dueDate";
+    inputDueDate.value = task.dueDate;
     inputDueDate.min = today;
     inputDueDate.required = true;
     divDueDate.appendChild(inputDueDate);
     form.appendChild(divDueDate);
 
-    const add = document.createElement("button");
-    add.textContent = "ADD";
-    add.classList.add("modal__button");
-    form.appendChild(add);
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const newTask = Task(
-        inputTask.value,
-        inputDescription.value,
-        inputPriority.value,
-        inputDueDate.value
-      );
-      projectsList[projectsList.indexOf(project)].listOfTasks.push(newTask);
-      localStorage.setItem("projects", JSON.stringify(projectsList));
-      modal_container.classList.remove("show-modal");
-      modal_container.innerHTML = "";
-      document.body.removeChild(main);
-      main = createProjectMain(projectsList[projectsList.indexOf(project)]);
-      document.body.appendChild(main);
-    });
+    if (toAdd) {
+      const add = document.createElement("button");
+      add.textContent = "ADD";
+      add.classList.add("modal__button");
+      form.appendChild(add);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newTask = Task(
+          inputTask.value,
+          inputDescription.value,
+          inputPriority.value,
+          inputDueDate.value
+        );
+        projectsList[projectsList.indexOf(project)].listOfTasks.push(newTask);
+        localStorage.setItem("projects", JSON.stringify(projectsList));
+        modal_container.classList.remove("show-modal");
+        modal_container.innerHTML = "";
+        document.body.removeChild(main);
+        main = createProjectMain(projectsList[projectsList.indexOf(project)]);
+        document.body.appendChild(main);
+      });
+    } else {
+      const edit = document.createElement("button");
+      edit.textContent = "EDIT";
+      edit.classList.add("modal__button");
+      form.appendChild(edit);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newTask = Task(
+          inputTask.value,
+          inputDescription.value,
+          inputPriority.value,
+          inputDueDate.value
+        );
+        projectsList[projectsList.indexOf(project)].listOfTasks[index] =
+          newTask;
+        localStorage.setItem("projects", JSON.stringify(projectsList));
+        modal_container.classList.remove("show-modal");
+        modal_container.innerHTML = "";
+        document.body.removeChild(main);
+        main = createProjectMain(projectsList[projectsList.indexOf(project)]);
+        document.body.appendChild(main);
+      });
+    }
+
     modal.appendChild(form);
 
     return modal;

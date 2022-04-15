@@ -14,7 +14,6 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
 }
 body {
   background-color: white;
@@ -22,6 +21,7 @@ body {
   grid-template: 80px 1fr / 300px 1fr;
   width: 100vw;
   min-height: 100vh;
+  font-family: "Roboto", sans-serif;
 }
 
 /* HEADER STYLING */
@@ -110,6 +110,7 @@ nav img {
 .add__project-container {
   background-color: rgba(0, 0, 0, 0.3);
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100vw;
@@ -129,6 +130,7 @@ nav img {
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
+  z-index: 1;
 }
 
 .show-modal {
@@ -165,10 +167,6 @@ main {
   cursor: pointer;
   transition: 0.4s ease;
 }
-.main__header-div img:hover,
-.task__options img:hover {
-  transform: scale(1.1);
-}
 .main__header {
   font-size: 40px;
   font-weight: 700;
@@ -203,14 +201,132 @@ main {
 .project__task > p:first-child {
   margin-right: auto;
 }
+.task__left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 22px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #8fd694;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #8fd694;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 .task__options {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+.tooltip {
+  height: 24px;
+  position: relative;
+  display: inline-block;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  width: 130px;
+  bottom: 110%;
+  left: 50%;
+  margin-left: -65px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  z-index: 1;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
 .task__options img {
   cursor: pointer;
   transition: 0.4s ease;
+}
+.task__done {
+  opacity: 0.7;
+  position: relative;
+}
+.task__done:after {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 50%;
+  height: 1px;
+  background: black;
+  content: "";
+  width: 100%;
+  display: block;
 }
 
 .modal__close {

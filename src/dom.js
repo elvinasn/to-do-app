@@ -188,7 +188,10 @@ const domController = (() => {
     form.appendChild(edit);
     form.addEventListener("submit", () => {
       const edittedProject = Project(inputName.value, inputDescription.value);
-      projectsList[projectsList.indexOf(project)] = edittedProject;
+      projectsList[projectsList.indexOf(project)].name = inputName.value;
+      projectsList[projectsList.indexOf(project)].description =
+        inputDescription.value;
+
       localStorage.setItem("projects", JSON.stringify(projectsList));
     });
     modal.appendChild(form);
@@ -250,9 +253,7 @@ const domController = (() => {
       localStorage.setItem("projects", JSON.stringify(projectsList));
       modal_container.classList.remove("show-modal");
       modal_container.innerHTML = "";
-      document.body.removeChild(main);
-      main = createProjectMain(projectsList[projectsList.indexOf(project)]);
-      document.body.appendChild(main);
+      refreshMain(project);
     });
     modal.appendChild(form);
 
@@ -269,13 +270,18 @@ const domController = (() => {
     projectHeader.textContent = project.name;
     headerDiv.appendChild(projectHeader);
 
+    const editToolTip = createToolTip("EDIT PROJECT");
+
     const edit = new Image();
     edit.src = editIcon;
     edit.addEventListener("click", () => {
       modal_container.appendChild(editModal());
       modal_container.classList.add("show-modal");
     });
-    headerDiv.appendChild(edit);
+    editToolTip.appendChild(edit);
+    headerDiv.appendChild(editToolTip);
+
+    const removeToolTip = createToolTip("REMOVE PROJECT");
 
     const remove = new Image();
     remove.src = deleteIcon;
@@ -283,8 +289,8 @@ const domController = (() => {
       modal_container.appendChild(deleteModal());
       modal_container.classList.add("show-modal");
     });
-    headerDiv.appendChild(remove);
-
+    removeToolTip.appendChild(remove);
+    headerDiv.appendChild(removeToolTip);
     main.appendChild(headerDiv);
 
     const projectDescription = document.createElement("p");
@@ -324,7 +330,37 @@ const domController = (() => {
     wrapper.dataset.index = index;
 
     const taskPara = document.createElement("p");
+    taskPara.classList.add("task__left");
     taskPara.textContent = task.task;
+
+    const toggleDone = document.createElement("label");
+    toggleDone.classList.add("switch");
+
+    const checkBox = document.createElement("input");
+    checkBox.type = "checkbox";
+    checkBox.checked = task.isDone;
+    toggleDone.appendChild(checkBox);
+    checkBox.addEventListener("change", () => {
+      console.log(checkBox.checked);
+      const project = projectFunctions.getProjectByName(
+        projectsList,
+        document.querySelector(".main__header").textContent
+      );
+      projectsList[projectsList.indexOf(project)].listOfTasks[index].isDone =
+        checkBox.checked;
+      localStorage.setItem("projects", JSON.stringify(projectsList));
+
+      setTimeout(() => {
+        refreshMain(project);
+      }, 500);
+    });
+
+    const span = document.createElement("span");
+    span.classList.add("slider");
+    span.classList.add("round");
+    toggleDone.appendChild(span);
+    taskPara.appendChild(toggleDone);
+
     wrapper.appendChild(taskPara);
 
     switch (task.priority) {
@@ -341,6 +377,7 @@ const domController = (() => {
     const rightSide = document.createElement("div");
     rightSide.classList.add("task__options");
 
+    const editToolTip = createToolTip("EDIT TASK");
     const editTask = new Image();
     editTask.src = editIcon;
     editTask.addEventListener("click", () => {
@@ -349,21 +386,39 @@ const domController = (() => {
         addTaskModal(false, wrapper.dataset.index, task)
       );
     });
-    rightSide.appendChild(editTask);
+    editToolTip.appendChild(editTask);
 
+    rightSide.appendChild(editToolTip);
+
+    const removeToolTip = createToolTip("REMOVE TASK");
     const removeTask = new Image();
     removeTask.src = deleteIcon;
     removeTask.addEventListener("click", () => {
       modal_container.classList.add("show-modal");
       modal_container.appendChild(deleteTaskModal(wrapper.dataset.index));
     });
-    rightSide.appendChild(removeTask);
+    removeToolTip.appendChild(removeTask);
+    rightSide.appendChild(removeToolTip);
 
     const dueDate = document.createElement("p");
     dueDate.textContent = task.dueDate;
     rightSide.appendChild(dueDate);
     wrapper.appendChild(rightSide);
+    if (task.isDone) {
+      console.log(task);
+      wrapper.classList.add("task__done");
+    }
     return wrapper;
+  };
+
+  const createToolTip = (text) => {
+    const toolTip = document.createElement("div");
+    toolTip.classList.add("tooltip");
+    const tooltipText = document.createElement("span");
+    tooltipText.classList.add("tooltiptext");
+    tooltipText.textContent = text;
+    toolTip.appendChild(tooltipText);
+    return toolTip;
   };
 
   const createTaskHeaders = () => {
@@ -515,9 +570,7 @@ const domController = (() => {
         localStorage.setItem("projects", JSON.stringify(projectsList));
         modal_container.classList.remove("show-modal");
         modal_container.innerHTML = "";
-        document.body.removeChild(main);
-        main = createProjectMain(projectsList[projectsList.indexOf(project)]);
-        document.body.appendChild(main);
+        refreshMain(project);
       });
     } else {
       const edit = document.createElement("button");
@@ -530,16 +583,15 @@ const domController = (() => {
           inputTask.value,
           inputDescription.value,
           inputPriority.value,
-          inputDueDate.value
+          inputDueDate.value,
+          task.isDone
         );
         projectsList[projectsList.indexOf(project)].listOfTasks[index] =
           newTask;
         localStorage.setItem("projects", JSON.stringify(projectsList));
         modal_container.classList.remove("show-modal");
         modal_container.innerHTML = "";
-        document.body.removeChild(main);
-        main = createProjectMain(projectsList[projectsList.indexOf(project)]);
-        document.body.appendChild(main);
+        refreshMain(project);
       });
     }
 
@@ -579,6 +631,12 @@ const domController = (() => {
     }
   };
   document.querySelector(".nav__projects").onclick = toggleDropDown;
+
+  const refreshMain = (project) => {
+    document.body.removeChild(main);
+    main = createProjectMain(projectsList[projectsList.indexOf(project)]);
+    document.body.appendChild(main);
+  };
   updateProjects();
   return {};
 })();

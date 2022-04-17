@@ -260,6 +260,34 @@ const domController = (() => {
     return modal;
   };
 
+  const previewTaskModal = (index) => {
+    const project = projectFunctions.getProjectByName(
+      projectsList,
+      document.querySelector(".main__header").textContent
+    );
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.append(modalClose());
+
+    const header = document.createElement("p");
+    header.textContent = project.listOfTasks[index].task;
+    header.classList.add("modal__header");
+    modal.appendChild(header);
+
+    const details = document.createElement("p");
+    details.innerHTML = `<span>Details: </span>${project.listOfTasks[index].description}`;
+    modal.appendChild(details);
+
+    const dueDate = document.createElement("p");
+    dueDate.innerHTML = `<span>Due Date: </span>${project.listOfTasks[index].dueDate}`;
+    modal.appendChild(dueDate);
+
+    const priority = document.createElement("p");
+    priority.innerHTML = `<span>Priority: </span>${project.listOfTasks[index].priority}`;
+    modal.appendChild(priority);
+    return modal;
+  };
+
   const createProjectMain = (project) => {
     const main = document.createElement("main");
     const headerDiv = document.createElement("div");
@@ -341,7 +369,6 @@ const domController = (() => {
     checkBox.checked = task.isDone;
     toggleDone.appendChild(checkBox);
     checkBox.addEventListener("change", () => {
-      console.log(checkBox.checked);
       const project = projectFunctions.getProjectByName(
         projectsList,
         document.querySelector(".main__header").textContent
@@ -405,9 +432,14 @@ const domController = (() => {
     rightSide.appendChild(dueDate);
     wrapper.appendChild(rightSide);
     if (task.isDone) {
-      console.log(task);
       wrapper.classList.add("task__done");
     }
+    wrapper.addEventListener("click", (e) => {
+      if (e.target.nodeName == "P" || e.target.nodeName == "DIV") {
+        modal_container.classList.add("show-modal");
+        modal_container.appendChild(previewTaskModal(wrapper.dataset.index));
+      }
+    });
     return wrapper;
   };
 

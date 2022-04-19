@@ -10,10 +10,16 @@ import * as dates from "date-fns";
 const domController = (() => {
   const dropDownContainer = document.querySelector(".nav__dropdown");
   let projectsList;
+  let hideCheck;
   if (localStorage.getItem("projects")) {
     projectsList = JSON.parse(localStorage.getItem("projects"));
   } else {
     projectsList = [Project("Project 1", "This is example of a project.")];
+  }
+  if (localStorage.getItem("hideCheck")) {
+    hideCheck = localStorage.getItem("hideCheck");
+  } else {
+    hideCheck = false;
   }
   localStorage.setItem("projects", JSON.stringify(projectsList));
   const open = document.getElementById("add_project");
@@ -387,16 +393,51 @@ const domController = (() => {
     }
 
     if (project.listOfTasks.length > 0) {
+      const hideDiv = document.createElement("div");
+      hideDiv.classList.add("tasks__hide");
+      const hideText = document.createElement("p");
+      hideText.textContent = "HIDE DONE TASKS";
+      hideDiv.appendChild(hideText);
+
+      const toggleDone = document.createElement("label");
+      toggleDone.classList.add("switch");
+
+      const checkBox = document.createElement("input");
+      checkBox.type = "checkbox";
+      checkBox.checked = hideCheck;
+      checkBox.addEventListener("change", () => {
+        hideCheck = checkBox.checked;
+        localStorage.setItem("hideCheck", checkBox.checked);
+        let tasks = document.querySelectorAll(".project__task");
+        Array.from(tasks).forEach((task) => {
+          console.log(task.dataset.isdone);
+          console.log(task.classList);
+          if (task.dataset.isdone === "true") {
+            console.log("aaa");
+            task.classList.toggle("hide");
+          }
+        });
+      });
+
+      toggleDone.appendChild(checkBox);
+      const span = document.createElement("span");
+      span.classList.add("slider");
+      span.classList.add("round");
+      toggleDone.appendChild(span);
+      hideDiv.appendChild(toggleDone);
+      main.appendChild(hideDiv);
       main.appendChild(createTaskHeaders(isProject));
       let i = 0;
       if (isProject) {
         project.listOfTasks.forEach((task) => {
-          main.appendChild(createTaskDiv(task, i));
+          main.appendChild(createTaskDiv(task, i, hideCheck));
           i++;
         });
       } else {
         project.listOfTasks.forEach((task) => {
-          main.appendChild(createUnEditableTaskDiv(task, projects[i]));
+          main.appendChild(
+            createUnEditableTaskDiv(task, projects[i], hideCheck)
+          );
           i++;
         });
       }
@@ -410,7 +451,7 @@ const domController = (() => {
     return main;
   };
 
-  const createTaskDiv = (task, index) => {
+  const createTaskDiv = (task, index, hideDone) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("project__task");
     wrapper.dataset.index = index;
@@ -433,6 +474,7 @@ const domController = (() => {
       );
       projectsList[projectsList.indexOf(project)].listOfTasks[index].isDone =
         checkBox.checked;
+      wrapper.dataset.isdone = checkBox.checked;
       localStorage.setItem("projects", JSON.stringify(projectsList));
 
       setTimeout(() => {
@@ -498,10 +540,21 @@ const domController = (() => {
         modal_container.appendChild(previewTaskModal(task));
       }
     });
+    if (
+      dates.isPast(dates.parseISO(task.dueDate)) &&
+      !dates.isToday(dates.parseISO(task.dueDate)) &&
+      !task.isDone
+    ) {
+      wrapper.classList.add("expired__task");
+    }
+    if (hideDone && task.isDone) {
+      wrapper.classList.add("hide");
+    }
+    wrapper.dataset.isdone = task.isDone;
     return wrapper;
   };
 
-  const createUnEditableTaskDiv = (task, project) => {
+  const createUnEditableTaskDiv = (task, project, hideDone) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("project__task");
 
@@ -537,6 +590,10 @@ const domController = (() => {
         modal_container.appendChild(previewTaskModal(task));
       }
     });
+    if (hideDone && task.isDone) {
+      wrapper.classList.add("hide");
+    }
+    wrapper.dataset.isdone = task.isDone;
     return wrapper;
   };
 
@@ -557,7 +614,6 @@ const domController = (() => {
     const taskPara = document.createElement("p");
     taskPara.textContent = isProject ? "TASK" : "TASK (PROJECT)";
     wrapper.appendChild(taskPara);
-
     const dueDate = document.createElement("p");
     dueDate.textContent = "DUE DATE";
     wrapper.appendChild(dueDate);

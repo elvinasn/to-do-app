@@ -209,6 +209,9 @@ main {
 .project__task > p:first-child {
   margin-right: auto;
 }
+.expired__task {
+  background-color: red;
+}
 .task__left {
   display: flex;
   gap: 10px;
@@ -321,6 +324,10 @@ input:checked + .slider:before {
   cursor: pointer;
   transition: 0.4s ease;
 }
+.tasks__hide {
+  display: flex;
+  gap: 20px;
+}
 .task__done {
   opacity: 0.7;
   position: relative;
@@ -377,4 +384,7 @@ main span {
 }
 .show_error {
   visibility: visible;
+}
+.hide {
+  display: none;
 }

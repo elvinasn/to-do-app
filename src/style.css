@@ -94,9 +94,7 @@ nav img {
 .nav__dropdown p {
   margin-top: 4px;
 }
-.show {
-  display: block;
-}
+
 .arrow-up {
   transition: 0.5s ease;
 }
@@ -349,7 +347,8 @@ input:checked + .slider:before {
 .modal__close:hover img {
   transform: scale(1.1);
 }
-.modal span {
+.modal span,
+main span {
   font-weight: 700;
 }
 
@@ -364,4 +363,14 @@ input:checked + .slider:before {
 }
 .left-border-darkred {
   border-left: 10px solid #b40c36;
+}
+.form__error {
+  color: red;
+  visibility: hidden;
+}
+.show {
+  display: block;
+}
+.show_error {
+  visibility: visible;
 }

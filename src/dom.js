@@ -5,6 +5,7 @@ import deleteIcon from "./images/delete.svg";
 import { projectFunctions } from "./projectFunctions";
 import { Task } from "./task";
 import closeIcon from "./images/close.svg";
+import * as dates from "date-fns";
 
 const domController = (() => {
   const dropDownContainer = document.querySelector(".nav__dropdown");
@@ -49,7 +50,39 @@ const domController = (() => {
     putActive(e, button);
     if (isProject(button)) {
       document.body.removeChild(main);
-      main = createProjectMain(projectsList[button.dataset.index]);
+      main = createProjectMain(projectsList[button.dataset.index], true);
+      document.body.appendChild(main);
+    }
+    if (e.target.closest("button").classList.contains("nav__today")) {
+      let today = Project("Today", "");
+      let projects = [];
+      projectsList.forEach((project) => {
+        project.listOfTasks.forEach((task) => {
+          if (dates.isToday(dates.parseISO(task.dueDate))) {
+            today.listOfTasks.push(task);
+            projects.push(project.name);
+          }
+        });
+      });
+
+      document.body.removeChild(main);
+      main = createProjectMain(today, false, projects);
+      document.body.appendChild(main);
+    }
+    if (e.target.closest("button").classList.contains("nav__thisweek")) {
+      let today = Project("This Week", "");
+      let projects = [];
+      projectsList.forEach((project) => {
+        project.listOfTasks.forEach((task) => {
+          if (dates.isThisISOWeek(dates.parseISO(task.dueDate))) {
+            today.listOfTasks.push(task);
+            projects.push(project.name);
+          }
+        });
+      });
+
+      document.body.removeChild(main);
+      main = createProjectMain(today, false, projects);
       document.body.appendChild(main);
     }
   });
@@ -88,6 +121,11 @@ const domController = (() => {
     modal.appendChild(header);
 
     const form = document.createElement("form");
+    const add = document.createElement("button");
+
+    const errorMsg = document.createElement("p");
+    errorMsg.classList.add("form__error");
+    errorMsg.textContent = "Project named like this already exists!";
 
     const divName = document.createElement("div");
 
@@ -97,10 +135,25 @@ const domController = (() => {
     divName.appendChild(labelForName);
 
     const inputName = document.createElement("input");
+
     inputName.type = "text";
     inputName.id = "name";
     inputName.required = true;
     inputName.maxLength = 20;
+    inputName.addEventListener("input", () => {
+      console.log(inputName.value);
+      if (
+        projectsList.some((project) => {
+          return project.name == inputName.value;
+        })
+      ) {
+        add.disabled = true;
+        errorMsg.classList.add("show_error");
+      } else {
+        add.disabled = false;
+        errorMsg.classList.remove("show_error");
+      }
+    });
     divName.appendChild(inputName);
     form.appendChild(divName);
 
@@ -120,7 +173,6 @@ const domController = (() => {
 
     form.appendChild(divDescription);
 
-    const add = document.createElement("button");
     add.textContent = "Create project";
     add.classList.add("modal__button");
     form.appendChild(add);
@@ -129,6 +181,7 @@ const domController = (() => {
       localStorage.setItem("projects", JSON.stringify(projectsList));
     });
     modal.appendChild(form);
+    modal.appendChild(errorMsg);
     return modal;
   };
 
@@ -260,35 +313,31 @@ const domController = (() => {
     return modal;
   };
 
-  const previewTaskModal = (index) => {
-    const project = projectFunctions.getProjectByName(
-      projectsList,
-      document.querySelector(".main__header").textContent
-    );
+  const previewTaskModal = (task) => {
     const modal = document.createElement("div");
     modal.classList.add("modal");
     modal.append(modalClose());
 
     const header = document.createElement("p");
-    header.textContent = project.listOfTasks[index].task;
+    header.textContent = task.task;
     header.classList.add("modal__header");
     modal.appendChild(header);
 
     const details = document.createElement("p");
-    details.innerHTML = `<span>Details: </span>${project.listOfTasks[index].description}`;
+    details.innerHTML = `<span>Details: </span>${task.description}`;
     modal.appendChild(details);
 
     const dueDate = document.createElement("p");
-    dueDate.innerHTML = `<span>Due Date: </span>${project.listOfTasks[index].dueDate}`;
+    dueDate.innerHTML = `<span>Due Date: </span>${task.dueDate}`;
     modal.appendChild(dueDate);
 
     const priority = document.createElement("p");
-    priority.innerHTML = `<span>Priority: </span>${project.listOfTasks[index].priority}`;
+    priority.innerHTML = `<span>Priority: </span>${task.priority}`;
     modal.appendChild(priority);
     return modal;
   };
 
-  const createProjectMain = (project) => {
+  const createProjectMain = (project, isProject, projects = "") => {
     const main = document.createElement("main");
     const headerDiv = document.createElement("div");
     headerDiv.classList.add("main__header-div");
@@ -297,51 +346,60 @@ const domController = (() => {
     projectHeader.classList.add("main__header");
     projectHeader.textContent = project.name;
     headerDiv.appendChild(projectHeader);
+    if (isProject) {
+      const editToolTip = createToolTip("EDIT PROJECT");
 
-    const editToolTip = createToolTip("EDIT PROJECT");
+      const edit = new Image();
+      edit.src = editIcon;
+      edit.addEventListener("click", () => {
+        modal_container.appendChild(editModal());
+        modal_container.classList.add("show-modal");
+      });
+      editToolTip.appendChild(edit);
+      headerDiv.appendChild(editToolTip);
 
-    const edit = new Image();
-    edit.src = editIcon;
-    edit.addEventListener("click", () => {
-      modal_container.appendChild(editModal());
-      modal_container.classList.add("show-modal");
-    });
-    editToolTip.appendChild(edit);
-    headerDiv.appendChild(editToolTip);
+      const removeToolTip = createToolTip("REMOVE PROJECT");
 
-    const removeToolTip = createToolTip("REMOVE PROJECT");
-
-    const remove = new Image();
-    remove.src = deleteIcon;
-    remove.addEventListener("click", () => {
-      modal_container.appendChild(deleteModal());
-      modal_container.classList.add("show-modal");
-    });
-    removeToolTip.appendChild(remove);
-    headerDiv.appendChild(removeToolTip);
+      const remove = new Image();
+      remove.src = deleteIcon;
+      remove.addEventListener("click", () => {
+        modal_container.appendChild(deleteModal());
+        modal_container.classList.add("show-modal");
+      });
+      removeToolTip.appendChild(remove);
+      headerDiv.appendChild(removeToolTip);
+    }
     main.appendChild(headerDiv);
+    if (isProject) {
+      const projectDescription = document.createElement("p");
+      projectDescription.classList.add("main__description");
+      projectDescription.textContent = project.description;
+      main.appendChild(projectDescription);
 
-    const projectDescription = document.createElement("p");
-    projectDescription.classList.add("main__description");
-    projectDescription.textContent = project.description;
-    main.appendChild(projectDescription);
+      const addTask = document.createElement("button");
+      addTask.textContent = "Add task";
 
-    const addTask = document.createElement("button");
-    addTask.textContent = "Add task";
-
-    addTask.addEventListener("click", () => {
-      modal_container.classList.add("show-modal");
-      modal_container.appendChild(addTaskModal(true));
-    });
-    main.appendChild(addTask);
+      addTask.addEventListener("click", () => {
+        modal_container.classList.add("show-modal");
+        modal_container.appendChild(addTaskModal(true));
+      });
+      main.appendChild(addTask);
+    }
 
     if (project.listOfTasks.length > 0) {
-      main.appendChild(createTaskHeaders());
+      main.appendChild(createTaskHeaders(isProject));
       let i = 0;
-      project.listOfTasks.forEach((task) => {
-        main.appendChild(createTaskDiv(task, i));
-        i++;
-      });
+      if (isProject) {
+        project.listOfTasks.forEach((task) => {
+          main.appendChild(createTaskDiv(task, i));
+          i++;
+        });
+      } else {
+        project.listOfTasks.forEach((task) => {
+          main.appendChild(createUnEditableTaskDiv(task, projects[i]));
+          i++;
+        });
+      }
     } else {
       const noTasks = document.createElement("p");
       noTasks.classList.add("main__header");
@@ -437,7 +495,46 @@ const domController = (() => {
     wrapper.addEventListener("click", (e) => {
       if (e.target.nodeName == "P" || e.target.nodeName == "DIV") {
         modal_container.classList.add("show-modal");
-        modal_container.appendChild(previewTaskModal(wrapper.dataset.index));
+        modal_container.appendChild(previewTaskModal(task));
+      }
+    });
+    return wrapper;
+  };
+
+  const createUnEditableTaskDiv = (task, project) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("project__task");
+
+    const taskPara = document.createElement("p");
+    taskPara.classList.add("task__left");
+    taskPara.innerHTML = `${task.task}<span> (${project})</span>`;
+    wrapper.appendChild(taskPara);
+
+    switch (task.priority) {
+      case "low":
+        wrapper.classList.add("left-border-green");
+        break;
+      case "medium":
+        wrapper.classList.add("left-border-yellow");
+        break;
+      case "high":
+        wrapper.classList.add("left-border-red");
+        break;
+    }
+    const rightSide = document.createElement("div");
+    rightSide.classList.add("task__options");
+
+    const dueDate = document.createElement("p");
+    dueDate.textContent = task.dueDate;
+    rightSide.appendChild(dueDate);
+    wrapper.appendChild(rightSide);
+    if (task.isDone) {
+      wrapper.classList.add("task__done");
+    }
+    wrapper.addEventListener("click", (e) => {
+      if (e.target.nodeName == "P" || e.target.nodeName == "DIV") {
+        modal_container.classList.add("show-modal");
+        modal_container.appendChild(previewTaskModal(task));
       }
     });
     return wrapper;
@@ -453,12 +550,12 @@ const domController = (() => {
     return toolTip;
   };
 
-  const createTaskHeaders = () => {
+  const createTaskHeaders = (isProject) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("task__headers");
 
     const taskPara = document.createElement("p");
-    taskPara.textContent = "TASK";
+    taskPara.textContent = isProject ? "TASK" : "TASK (PROJECT)";
     wrapper.appendChild(taskPara);
 
     const dueDate = document.createElement("p");
@@ -666,7 +763,7 @@ const domController = (() => {
 
   const refreshMain = (project) => {
     document.body.removeChild(main);
-    main = createProjectMain(projectsList[projectsList.indexOf(project)]);
+    main = createProjectMain(projectsList[projectsList.indexOf(project)], true);
     document.body.appendChild(main);
   };
   updateProjects();

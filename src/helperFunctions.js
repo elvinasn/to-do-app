@@ -1,4 +1,5 @@
-const projectFunctions = (() => {
+import * as dates from "date-fns";
+const helperFunctions = (() => {
   const getProjectByName = (projectsList, name) => {
     let found;
     projectsList.forEach((element) => {
@@ -10,6 +11,7 @@ const projectFunctions = (() => {
     return found;
   };
 
+
   return { getProjectByName };
 })();
-export { projectFunctions };
+export { helperFunctions };

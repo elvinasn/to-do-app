@@ -2,7 +2,7 @@ import { Project } from "./project";
 import projectImg from "./images/singleproj.svg";
 import editIcon from "./images/edit.svg";
 import deleteIcon from "./images/delete.svg";
-import { projectFunctions } from "./projectFunctions";
+import { helperFunctions } from "./helperFunctions";
 import { Task } from "./task";
 import closeIcon from "./images/close.svg";
 import * as dates from "date-fns";
@@ -12,12 +12,13 @@ const domController = (() => {
   let projectsList;
   let hideCheck;
   if (localStorage.getItem("projects")) {
+    console.log("aa");
     projectsList = JSON.parse(localStorage.getItem("projects"));
   } else {
     projectsList = [Project("Project 1", "This is example of a project.")];
   }
   if (localStorage.getItem("hideCheck")) {
-    hideCheck = localStorage.getItem("hideCheck");
+    hideCheck = localStorage.getItem("hideCheck") === "true";
   } else {
     hideCheck = false;
   }
@@ -30,6 +31,7 @@ const domController = (() => {
   const updateProjects = () => {
     dropDownContainer.innerHTML = "";
     let i = 0;
+    console.log(projectsList);
     projectsList.forEach((project) => {
       const button = document.createElement("button");
       button.dataset.index = i;
@@ -192,7 +194,7 @@ const domController = (() => {
   };
 
   const editModal = () => {
-    const project = projectFunctions.getProjectByName(
+    const project = helperFunctions.getProjectByName(
       projectsList,
       document.querySelector(".main__header").textContent
     );
@@ -258,7 +260,7 @@ const domController = (() => {
   };
 
   const deleteModal = () => {
-    const project = projectFunctions.getProjectByName(
+    const project = helperFunctions.getProjectByName(
       projectsList,
       document.querySelector(".main__header").textContent
     );
@@ -287,7 +289,7 @@ const domController = (() => {
     return modal;
   };
   const deleteTaskModal = (index) => {
-    const project = projectFunctions.getProjectByName(
+    const project = helperFunctions.getProjectByName(
       projectsList,
       document.querySelector(".main__header").textContent
     );
@@ -428,6 +430,9 @@ const domController = (() => {
       main.appendChild(hideDiv);
       main.appendChild(createTaskHeaders(isProject));
       let i = 0;
+      project.listOfTasks.sort(function (a, b) {
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      });
       if (isProject) {
         project.listOfTasks.forEach((task) => {
           main.appendChild(createTaskDiv(task, i, hideCheck));
@@ -468,7 +473,7 @@ const domController = (() => {
     checkBox.checked = task.isDone;
     toggleDone.appendChild(checkBox);
     checkBox.addEventListener("change", () => {
-      const project = projectFunctions.getProjectByName(
+      const project = helperFunctions.getProjectByName(
         projectsList,
         document.querySelector(".main__header").textContent
       );
@@ -621,7 +626,7 @@ const domController = (() => {
   };
 
   const addTaskModal = (toAdd, index = 0, task = Task("", "", "low", "")) => {
-    const project = projectFunctions.getProjectByName(
+    const project = helperFunctions.getProjectByName(
       projectsList,
       document.querySelector(".main__header").textContent
     );

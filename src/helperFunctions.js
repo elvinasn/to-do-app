@@ -10,8 +10,12 @@ const helperFunctions = (() => {
     });
     return found;
   };
+  const refreshMain = (projectsList, project, main, createProjectMain) => {
+    document.body.removeChild(main);
+    main = createProjectMain(projectsList[projectsList.indexOf(project)], true);
+    document.body.appendChild(main);
+  };
 
-
-  return { getProjectByName };
+  return { getProjectByName, refreshMain };
 })();
 export { helperFunctions };

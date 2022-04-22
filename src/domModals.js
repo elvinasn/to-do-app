@@ -299,7 +299,6 @@ const domModals = (() => {
 
     const inputDescription = document.createElement("textarea");
     inputDescription.id = "description";
-    inputDescription.required = true;
     inputDescription.rows = 3;
     inputDescription.cols = 20;
     inputDescription.value = task.description;
@@ -352,25 +351,11 @@ const domModals = (() => {
     divDueDate.appendChild(labelForDueDate);
 
     const inputDueDate = document.createElement("input");
-    // TODO: Extract this function
-    let today = new Date();
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear();
 
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-
-    today = yyyy + "-" + mm + "-" + dd;
     inputDueDate.type = "date";
     inputDueDate.id = "dueDate";
     inputDueDate.value = task.dueDate;
-    inputDueDate.min = today;
+    inputDueDate.min = helperFunctions.getTodayDate();
     inputDueDate.required = true;
     divDueDate.appendChild(inputDueDate);
     form.appendChild(divDueDate);

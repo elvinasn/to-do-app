@@ -26,7 +26,6 @@ const domController = (() => {
   const modal_container = document.getElementById("modal-container");
   let main = document.querySelector("main");
 
-  /// TODO: Update this method
   const init = () => {
     let today = Project("Today", "");
     let projects = [];
@@ -171,7 +170,8 @@ const domController = (() => {
       main.appendChild(projectDescription);
 
       const addTask = document.createElement("button");
-      addTask.textContent = "Add task";
+      addTask.classList.add("addtask__button");
+      addTask.textContent = "ADD TASK";
 
       addTask.addEventListener("click", () => {
         modal_container.classList.add("show-modal");
@@ -187,6 +187,7 @@ const domController = (() => {
       hideDiv.classList.add("tasks__hide");
       const hideText = document.createElement("p");
       hideText.textContent = "HIDE DONE TASKS";
+      hideText.style.fontWeight = 700;
       hideDiv.appendChild(hideText);
 
       const toggleDone = document.createElement("label");
@@ -388,7 +389,7 @@ const domController = (() => {
     wrapper.addEventListener("click", (e) => {
       if (e.target.nodeName == "P" || e.target.nodeName == "DIV") {
         modal_container.classList.add("show-modal");
-        modal_container.appendChild(previewTaskModal(task));
+        modal_container.appendChild(domModals.previewTaskModal(task));
       }
     });
     if (hideDone && task.isDone) {

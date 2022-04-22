@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -10,11 +9,13 @@
     transform: translate3d(0, 0, 0);
   }
 }
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
+
 body {
   background-color: white;
   display: grid;
@@ -25,13 +26,13 @@ body {
 }
 
 /* HEADER STYLING */
-
 header {
   background-color: #e85d75;
   grid-column: span 2;
   padding: 40px;
   color: white;
 }
+
 .logo {
   height: 100%;
   display: flex;
@@ -47,14 +48,15 @@ header {
 }
 
 /* NAV STYLING */
-
 nav {
-  background-color: hsla(0, 0%, 95%);
+  background-color: #f2f2f2;
   border-right: 1px solid black;
   height: calc(100vh - 80px);
   overflow: auto;
 }
-nav div,
+nav div {
+  width: 100%;
+}
 nav button {
   width: 100%;
 }
@@ -67,21 +69,28 @@ nav button:not(.modal__button) {
   cursor: pointer;
 }
 nav button:hover:not(.modal__button),
-nav button:active:not(.modal__button),
+nav button:active:not(.modal__button) {
+  background-color: #fff;
+}
+
 .active {
   background-color: #fff;
 }
+
 nav img {
   height: 30px;
 }
+
 .nav__section {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .nav__projects {
   display: flex;
 }
+
 .nav__dropdown {
   display: none;
   animation: fadeIn 0.5s ease-in both;
@@ -100,13 +109,16 @@ nav img {
 .arrow-up {
   transition: 0.5s ease;
 }
+
 .rotate {
   transform: rotate(180deg);
 }
+
 .active {
   background-color: #fff !important;
   font-weight: 700;
 }
+
 .add__project-container {
   background-color: rgba(0, 0, 0, 0.3);
   position: fixed;
@@ -122,32 +134,49 @@ nav img {
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
+
 .modal {
   background-color: #fff;
   width: 600px;
   max-width: 100%;
-  padding: 10px 10px 40px 10px;
+  padding: 15px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
   z-index: 1;
+}
+.modal input,
+.modal textarea {
+  padding: 5px;
+}
+.modal > form > div {
+  margin: 5px;
 }
 
 .show-modal {
   opacity: 1;
   pointer-events: auto;
 }
+
+.modal__button {
+  margin-top: 10px;
+}
+
 .modal__header {
   font-size: 20px;
-  margin-top: 30px;
   font-weight: 700;
+  margin-left: 24px;
+  text-align: center;
 }
+
 label {
   display: block;
 }
+
 textarea {
   resize: none;
 }
+
 main {
   background-color: white;
   padding: 30px;
@@ -156,6 +185,7 @@ main {
   align-items: center;
   height: calc(100vh - 80px);
 }
+
 .main__header-div {
   display: flex;
   gap: 20px;
@@ -168,17 +198,40 @@ main {
   cursor: pointer;
   transition: 0.4s ease;
 }
+
 .main__header {
   font-size: 40px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   min-width: max-content;
 }
+
 .main__description {
   opacity: 0.7;
   width: 70%;
   text-align: center;
+  margin-bottom: 10px;
 }
+
+.addtask__button,
+.modal__button {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #e85d75;
+  border: 3px solid #e85d75;
+  color: white;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.4s ease;
+}
+.addtask__button:hover,
+.modal__button:hover {
+  background-color: inherit;
+  color: black;
+}
+
 .task__headers {
   width: 100%;
   padding: 10px;
@@ -188,12 +241,13 @@ main {
   display: flex;
   font-weight: 700;
 }
+
 .project__task {
   width: 100%;
   padding: 10px;
   justify-content: space-around;
   align-items: center;
-  background-color: hsl(0, 0%, 95%);
+  background-color: #f2f2f2;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   cursor: pointer;
@@ -202,35 +256,35 @@ main {
   margin: 5px;
 }
 .project__task:hover {
-  box-shadow: 0px 0px 5px hsl(0, 0%, 70%);
+  box-shadow: 0px 0px 5px #b3b3b3;
   transform: scale(1.005);
 }
 .project__task > p:first-child {
   margin-right: auto;
 }
+
 .expired__task {
   background-color: red;
 }
+
 .task__left {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .switch {
   position: relative;
   display: inline-block;
   width: 50px;
   height: 22px;
 }
-
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -242,7 +296,6 @@ main {
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -269,19 +322,19 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
-
 .slider.round:before {
   border-radius: 50%;
 }
+
 .task__options {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .tooltip {
   height: 24px;
   position: relative;
@@ -296,37 +349,37 @@ input:checked + .slider:before {
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
-
-  /* Position the tooltip text - see examples below! */
   position: absolute;
   width: 130px;
   bottom: 110%;
   left: 50%;
-  margin-left: -65px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  margin-left: -65px;
   z-index: 1;
 }
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
-  top: 100%; /* At the bottom of the tooltip */
+  top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
   border-color: black transparent transparent transparent;
 }
-/* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
 .task__options img {
   cursor: pointer;
   transition: 0.4s ease;
 }
+
 .tasks__hide {
   display: flex;
   gap: 20px;
 }
+
 .task__done {
   opacity: 0.7;
   position: relative;
@@ -348,7 +401,6 @@ input:checked + .slider:before {
   background-color: inherit;
   border: none;
   height: min-content;
-
   cursor: pointer;
 }
 .modal__close img {
@@ -357,6 +409,7 @@ input:checked + .slider:before {
 .modal__close:hover img {
   transform: scale(1.1);
 }
+
 .modal span,
 main span {
   font-weight: 700;
@@ -365,25 +418,33 @@ main span {
 .left-border-green {
   border-left: 10px solid #8fd694;
 }
+
 .left-border-yellow {
   border-left: 10px solid #ffd670;
 }
+
 .left-border-red {
   border-left: 10px solid #c23a5c;
 }
+
 .left-border-darkred {
   border-left: 10px solid #b40c36;
 }
+
 .form__error {
   color: red;
   visibility: hidden;
 }
+
 .show {
   display: block;
 }
+
 .show_error {
   visibility: visible;
 }
+
 .hide {
   display: none;
 }
+

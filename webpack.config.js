@@ -13,7 +13,7 @@ module.exports = {
   devtool: "inline-source-map",
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Too-Doo",
+      title: "Too Doo",
       template: "src/template.html",
     }),
   ],

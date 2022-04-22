@@ -8,3 +8,6 @@ To do app is a basic app to plan your tasks. It uses local storage to store the 
 - Javascript
 - NPM
 - Webpack
+
+## Live preview
+https://elvinasn.github.io/to-do-app/
